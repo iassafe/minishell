@@ -1,0 +1,707 @@
+
+
+char	*fun(char *s, t_var *p, char c)
+{
+	int		fir;
+
+	fir = p->i;
+	p->pos = 0;
+	p->i++;
+	while (s[p->i] && s[p->i] != c)
+	{
+		if (s[p->i] == '$' && s[p->i + 1] == '$')
+		{
+			p->pos = p->i;
+			while (s[p->i] && s[p->i] == '$')
+				p->i++;
+			p->s1 = ft_substr(s, 0, p->pos);
+			p->s2 = ft_substr(s, p->i, ft_strlen(s));
+			s = ft_strjoin(p->s1, p->s2);
+			p->i -= p->pos;
+		}
+		p->i++;
+	}
+	p->s1 = ft_substr(s, 0, fir);
+	p->s2 = ft_substr(s, fir + 1, p->i - fir - 1);
+	p->s3 = ft_substr(s, p->i + 1, (ft_strlen(s) - p->i));
+	s = ft_strjoin(p->s1, p->s2);
+	s = ft_strjoin(s, p->s3);
+	return (s);
+}
+
+minishell$ <|<|dl
+syntax error
+minishell$ "|"
+minishell$ 'jhfjd'f"
+syntax error
+minishell$ "hhjgahjfhg"'
+syntax error
+minishell$ "hhjgahjfhg"''
+minishell$ " " | ""
+minishell$ ls | ls ""
+minishell$ ls | ls '""'
+minishell$ ls | ls "''"
+minishell$ ls | "ls" ' '
+minishell$ <|d
+syntax error
+minishell$ <<f
+minishell$ d | "||"
+minishell$ d | '||'
+minishell$ echo "" || " "
+syntax error
+minishell$ d < |d
+syntax error
+
+minishell$:  >>|JHF
+syntax error
+minishell$: <<|JDF
+syntax error
+
+
+
+
+------------------------------------
+minishell$ echo
+minishell$ echo """"
+minishell$ echo " "" "
+minishell$ echo " "|" "
+minishell$ echo " "||" "
+syntax error
+minishell$ echo "||"
+minishell$ echo "'||'"
+minishell$ echo "'"||""
+syntax error
+minishell$ echo ""||""
+syntax error
+minishell$ echo ""||"
+syntax error
+minishell$: echo "" || " "
+syntax error
+minishell$ d | "||"
+minishell$ <|d
+minishell$  l's'
+minishell$  'ffd | fdf' | f
+minishell$ "<"|"" |         <"">""  > d  | 'echo hi     '
+minishell$ ls | "ls" ' '
+minishell$ ""|>|d
+minishell$ "fdff |""""
+syntax error
+minishell$ ""|""|d
+minishell$ echo "''"
+minishell$ l$  ""
+minishell$ ""
+minishell$ 
+minishell$ "          "
+minishell$ ls
+minishell$ ls " "
+minishell$ "
+syntax error
+minishell$ " '
+syntax error
+minishell$ "'"
+minishell$ $$d
+minishell$ $"$d
+syntax error
+minishell$ |
+syntax error
+minishell$ "|"
+minishell$ <<"|"
+minishell$ << <"|"
+syntax error
+minishell$ d < |"
+syntax error
+minishell$ d < |d
+minishell$ d < | < l
+syntax error
+minishell$ d <"" | < l
+minishell$  | < l
+syntax error
+minishell$ "" ""
+minishell$ "''"
+minishell$ "' '''"
+minishell$ "' '  | ' '"
+minishell$ "' '  | ' '"|
+syntax error
+minishell$ "' '  | ' '"|a
+minishell$ echo $  d
+minishell$ < <<<<
+syntax error
+minishell$ <<<<
+syntax error
+minishell$ "S<S>"
+minishell$ "S<S>" <"<"<"<"
+minishell$ "S<S>" < "<" < < "<"
+syntax error
+minishell$ "S<S>" < "<" < "<"
+minishell$ ||||||
+syntax error
+minishell$ a||a
+syntax error
+minishell$ a|   |a
+syntax error
+minishell$ a| ""  |a
+minishell$ a|  |a
+syntax error
+minishell$ a |   | a
+syntax error
+minishell$ a |  a | a
+minishell$ a "\"
+minishell$ a "|"
+minishell$ a '|'
+
+-----------
+minishell$ otrtiy yti     "lsld ddd" ddd
+minishell$ "lsld ddd"
+minishell$ ddd
+minishell$ >|ls
+minishell$ ech"o"
+minishell$ jdfvh|fblk
+minishell$ jdfvh>fblk
+minishell$ jdfv<<$fblk
+minishell$ abc|>kddk
+minishell$ "|""||"
+minishell$ ls | pwd | cat
+minishell$ "jhk|hkhk""
+syntax error
+minishell$ cat                  <infile | pwd | wc      -l
+minishell$ ls | awk "{print 45 $NR'};"
+minishell$ ls -la
+minishell$ ls | awk -s "{print 45 $NR'};"
+minishell$ ls | awk -s "{print 45'};"
+minishell$ awk '{print}' Makefile
+minishell$ echo $1
+minishell$ awk '{print $1}' Makefile
+minishell$ awk '{print $NR}' Makefile
+minishell$ ls | awk -s "{print 45 $NR'};
+syntax error
+minishell$ &
+minishell$ |
+syntax error
+minishell$ ""
+minishell$ ''
+minishell$ ||
+syntax error
+minishell$ >
+syntax error
+minishell$ <<
+syntax error
+minishell$ >>
+syntax error
+minishell$ <
+syntax error
+minishell$ 
+minishell$ ls|pwd|cat
+
+------------------------------------------------sahar
+
+bash-3.2$ echo $;hi
+$
+bash: hi: command not found
+bash-3.2$ echo $/hi
+$/hi
+bash-3.2$ echo $<hi
+bash: hi: No such file or directory
+bash-3.2$ echo $>hi
+bash-3.2$ echo $@hi
+hi
+bash-3.2$ echo $@hi
+hi
+bash-3.2$ echo $?
+0
+bash-3.2$ echo $?kj
+0kj
+bash-3.2$ echo $?hi
+0hi
+bash-3.2$ echo $USER
+khanhayf
+bash-3.2$ echo $_USER
+
+bash-3.2$ echo $&USER
+[1] 83091
+$
+bash: USER: command not found
+[1]+  Done                    echo $
+& * - \ $ # @ 
+numbers 0->9
+bash-3.2$ echo $bash
+\n
+bash-3.2$ echo $_hi
+\n
+bash-3.2$ echo $?hi
+127hi
+echo $!hi
+echo $hi"ji" | "ola"
+bash-3.2$ echo $`hi  ????????????????????????????????????????????????????????????
+>
+bash-3.2$ echo $;hi
+$
+bash: hi: command not found
+
+
+
+bash-3.2$ echo $# 
+
+0USER
+bash-3.2$ echo $@USER
+USER
+bash-3.2$ echo $\USER
+$USER
+bash-3.2$ echo $-USER
+himBHUSER
+bash-3.2$ echo $*USER
+USER
+bash-3.2$ echo $$USER
+82943USER
+bash-3.2$ echo $+USER
+$+USER
+bash-3.2$ echo $4USER
+USER
+bash-3.2$ echo $6USER
+USER
+bash-3.2$ echo $0USER
+bashUSER
+bash-3.2$ echo $1USER
+USER
+bash-3.2$ echo $2USER
+USER
+bash-3.2$ echo $3USER
+USER
+bash-3.2$ echo $4USER
+USER
+bash-3.2$ echo $5USER
+USER
+bash-3.2$ echo $6USER
+USER
+bash-3.2$ echo $7USER
+USER
+bash-3.2$ echo $8USER
+USER
+bash-3.2$ echo $9USER
+USER
+bash-3.2$ echo $+USER
+$+USER
+
+
+minishell$ echo " jhfh  $+USER $*USER $@USER  $-USER $$USER $/SERR $\USER $USER"
+
+bash-3.2$
+
+$/USER
+bash-3.2$ echo $+USER
+$+USER
+bash-3.2$ echo $\USER
+$USER
+
+ECHO------------------------------------
+BASH-3.2$ echo -nnnnnnnnnnnn -nnnnnnnnnnn fdjl
+fdjlBASH-3.2$ 
+BASH-3.2$ echo -nnnnnnnnnnnn -nnnnnnnnnnnm fdjl
+-nnnnnnnnnnnm fdjlBASH-3.2$ 
+BASH-3.2$ echo -nnnnnnnnnnnnk -nnnnnnnnnnnm fdjl
+-nnnnnnnnnnnnk -nnnnnnnnnnnm fdjl
+BASH-3.2$ 
+BASH-3.2$ echo -nnnnnnnnnnnn fdjl
+fdjlBASH-3.2$ 
+
+expand-------------------------------------
+bash-3.2$ < $jkf ??????????????????????????????????????????????????/
+bash: $jkf: ambiguous redirect
+bash-3.2$ << $jkf
+> $jkf
+bash-3.2$ 
+BASH-3.2$ cat <<$HOME
+> FDJSFKLD
+> $PWD
+> $HOME
+FDJSFKLD
+/Users/khanhayf
+BASH-3.2$ $s
+BASH-3.2$ echo $$$$$$
+505905059050590
+
+BASH-3.2$ ECHO $SHLVL
+2
+bash-3.2$ ECHO $SHLVL
+10
+bash-3.2$ bash
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+bash-3.2$ ECHO $SHLVL
+11
+
+----------------------------------------------------cd 
+BASH-3.2$ ls
+00              Documents       Music           aa              goinfre         loll13
+Applications    Downloads       Philosophers    bleach_42       hamza           rben-mou
+Cleaner_42.sh   Library         Pictures        ev_naima        libft           test
+Desktop         Movies          VirtualBox VMs  francinette     link.c          xx
+BASH-3.2$ mkdir kk
+BASH-3.2$ cd kk
+BASH-3.2$ ls
+BASH-3.2$ mkdir kk
+BASH-3.2$ cd kk
+BASH-3.2$ ls
+BASH-3.2$ pwd
+/Users/khanhayf/kk/kk
+BASH-3.2$ rm -rf ../../kk/
+BASH-3.2$ ls
+BASH-3.2$ pwd
+/Users/khanhayf/kk/kk
+BASH-3.2$ cd ..
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+BASH-3.2$ ls
+BASH-3.2$ pwd
+/Users/khanhayf/kk/kk/..
+
+-------------------------------------------#
+minishell2 echo "A comment will follow." # Comment here.           
+A comment will follow.
+
+ minishell2 # | ls
+➜  minishell2
+
+
+
+
+
+
+
+*********************************************************
+minishell$ ç
+minishell$ echo $USERR
+minishell$ <> >> <<
+syntax error
+minishell$ <test
+DATA : <|
+EXP : infile|
+DATA : test|
+EXP : file|
+minishell$ <test >
+syntax error
+minishell$ <test > ts
+DATA : <|
+EXP : infile|
+DATA : test|
+EXP : file|
+DATA : >|
+EXP : o_file|
+DATA : ts|
+EXP : file|
+minishell$ <test > ts >>
+syntax error
+minishell$ <test > ts >> test
+DATA : <|
+EXP : infile|
+DATA : test|
+EXP : file|
+DATA : >|
+EXP : o_file|
+DATA : ts|
+EXP : file|
+DATA : >>|
+EXP : append|
+DATA : test|
+EXP : file|
+minishell$ <test > ts >> test|""
+DATA : <|
+EXP : infile|
+DATA : test|
+EXP : file|
+DATA : >|
+EXP : o_file|
+DATA : ts|
+EXP : file|
+DATA : >>|
+EXP : append|
+DATA : test|
+EXP : file|
+DATA : ||
+EXP : pipe|
+DATA : ""|
+EXP : cmd|
+minishell$ <test > ts >> test|"" ''
+DATA : <|
+EXP : infile|
+DATA : test|
+EXP : file|
+DATA : >|
+EXP : o_file|
+DATA : ts|
+EXP : file|
+DATA : >>|
+EXP : append|
+DATA : test|
+EXP : file|
+DATA : ||
+EXP : pipe|
+DATA : ""|
+EXP : cmd|
+DATA : ''|
+EXP : opt|
+minishell$ <test > ts >> test|"" '' | '|'
+DATA : <|
+EXP : infile|
+DATA : test|
+EXP : file|
+DATA : >|
+EXP : o_file|
+DATA : ts|
+EXP : file|
+DATA : >>|
+EXP : append|
+DATA : test|
+EXP : file|
+DATA : ||
+EXP : pipe|
+DATA : ""|
+EXP : cmd|
+DATA : ''|
+EXP : opt|
+DATA : ||
+EXP : pipe|
+DATA : '|'|
+EXP : cmd|
+minishell$ <test > ts >> test|"" '' | '|' "\"\""
+DATA : <|
+EXP : infile|
+DATA : test|
+EXP : file|
+DATA : >|
+EXP : o_file|
+DATA : ts|
+EXP : file|
+DATA : >>|
+EXP : append|
+DATA : test|
+EXP : file|
+minishell$ '
+syntax error
+minishell$ << $HOME
+minishell$ "<<" $HOME
+DATA : "<<"|
+EXP : cmd|
+DATA : /Users/iassafe|
+EXP : env|
+minishell$ << "$HOME"
+DATA : <<|
+EXP : h_doc|
+DATA : "$HOME"|
+EXP : del|
+minishell$ ls $HOME$dkkh
+DATA : ls|
+EXP : cmd|
+DATA : /Users/iassafe$  |
+EXP : env|
+minishell$ ls $$HOME
+DATA : ls|
+EXP : cmd|
+DATA : HOME|
+EXP : env|
+minishell$ ls $$$HOME
+DATA : ls|
+EXP : cmd|
+DATA : $HOME|
+EXP : env|
+minishell$: $$
+DATA : |
+EXP : cmd|
+bash-3.2$ $$
+bash: 53707: command not found
+minishell$ ld $$
+DATA : ld|
+EXP : cmd|
+DATA : |
+EXP : env|
+minishell$: $$$
+DATA : $|
+EXP : cmd|
+minishell$ ls $$$
+DATA : ls|
+EXP : cmd|
+DATA : $|
+EXP : env|
+minishell$: ls $sghsd+shdjs
+DATA : ls|
+EXP : cmd|
+DATA : $        +shdjs|
+EXP : env|
+➜  minishell ./minishell
+minishell$: d $HOME+hsd
+DATA : d|
+EXP : cmd|
+DATA : /Users/iassafe+hsd|
+EXP : env|
+minishell$: d $HOME-hsd
+DATA : d|
+EXP : cmd|
+DATA : /Users/iassafe-hsd|
+EXP : env|
+EXP : env|
+minishell$: $"HOME"
+DATA : $"HOME"|
+EXP : cmd|
+minishell$ ls $"HOME"
+DATA : ls|
+EXP : cmd|
+DATA : $"HOME"|
+EXP : env|
+minishell$ l "$HOME"
+DATA : l|
+EXP : cmd|
+DATA : "/Users/iassafe"|
+EXP : env|
+minishell$ l '$HOME'
+DATA : l|
+EXP : cmd|
+DATA : '$HOME'|
+EXP : opt|
+minishell$ l '"$HOME"'
+DATA : l|
+EXP : cmd|
+DATA : '"$HOME"'|
+EXP : opt|
+minishell$ l "'$HOME'"
+DATA : l|
+EXP : cmd|
+DATA : "'$      "|
+EXP : env|
+minishell$: l "'$HOME'"
+DATA : l|
+EXP : cmd|
+DATA : "'/Users/iassafe'"|
+EXP : env|
+minishell$ l '"$HOME"'
+DATA : l|
+EXP : cmd|
+DATA : '"$HOME"'|
+EXP : opt|
+minishell$ 
+
+
+
+****************
+PRINT;
+
+bash-3.2$ echo '$USER'
+$USER
+bash-3.2$ echo "$USER"
+iassafe
+bash-3.2$ "$USER"
+bash: iassafe: command not found
+bash-3.2$ '$USER'
+bash: $USER: command not found
+bash-3.2$ ECHO "'$USER'"
+'khanhayf'
+bash-3.2$ ECHO '"$USER"'
+"$USER"
+bash-3.2$  ECHO "'$USER'"
+'khanhayf'
+
+
+
+EXP
+    ''""$USER""''
+
+    "'$$L$USER'"
+
+
+
+bash-3.2$ >> <''
+bash: syntax error near unexpected token `<'
+bash-3.2$ ><''
+bash: syntax error near unexpected token `<'
+bash-3.2$ ><''
+
+minishell$: ls  gh
+DATA : ls       gh|
+form : cmd|
+
+minishell$: $"PATH"
+DATA : $PATH|
+form : cmd|
+
+bash-3.2$ '"$$$"'
+bash: "$$$": command not found
+
+echo ls | ./minishell
+
+➜  minishell echo ls | ./minishell
+
+**
+
+
+minishell$: << hello
+> hell
+minishell$: <<>
+syntax error
+minishell$: <<>f
+> 
+minishell$: << >f
+> 
+|
+
+
+// while (head)
+			// {
+			// 	printf("DATA         : %s|\n", head->data);
+			// 	printf("form         : %s|\n", head->exp);
+			// 	head = head->link;
+			// }
+			x = exec_list(head, x, c_env);
+			// // create_pipe(x);
+			// x = x->link;
+			// while (x)
+			// {
+			// 	i = 0;
+			// 	while (x->cmd[i])
+			// 	{
+			// 		printf("cmd %s|\n", x->cmd[i]);
+			// 		printf("prev cmd %s|\n", x->prev->cmd[i]);
+			// 		i++;
+			// 	}
+			// 	printf("in_fd %d\n", x->in_fd);
+			// 	// printf("prev in_fd %d\n", x->prev->in_fd);
+			// 	printf("out_fd %d\n", x->out_fd);
+			// 	// printf("prev out_fd %d\n", x->prev->out_fd);
+			// 	printf("pipe %d\n", x->p_aft);
+			// 	// printf("prev pipe %d\n", x->prev->p_aft);
+			// 	x = x->link;
+			// }
+			// while (x)
+			// {
+			// 	i = 0;
+			// 	while (x->prev->cmd[i])
+			// 	{
+			// 		puts("****");
+			// 		printf("cmd %s|\n", x->prev->prev->cmd[i]);
+			// 		i++;
+			// 	}
+			// 	puts("-----------");
+			// 	x = x->prev->link;
+			// }
+			// while (c_env)
+			// {
+			// 	printf("%s=", c_env->var);
+			// 	printf("%s|\n", c_env->value);
+			// 	c_env = c_env->next;
+			// }
+			//release(tab);
+			//free_lists(p);
+			//free_env_list(c_env);
+
+
+
+	// while (g_gl.env)
+	// {
+	// 	printf("%s=%s\n", g_gl.env->var, g_gl.env->value);
+	// 	g_gl.env = g_gl.env->link;
+	// }
+
+
+	
+// void	at(void)
+// {
+// 	system("leaks minishell");
+// }

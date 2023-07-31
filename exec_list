@@ -1,0 +1,28 @@
+bash-3.2$ "<<" $HOME
+bash: <<: command not found
+
+bash-3.2$ "$HOME"
+bash: /Users/iassafe: is a directory
+
+bash-3.2$ "$USER"
+bash: iassafe: command not found
+
+bash-3.2$ "    $USER"
+bash:     iassafe: command not found
+
+bash-3.2$ hgjkg ls
+bash: hgjkg: command not found
+bash-3.2$ hgjkg | ls
+bash: hgjkg: command not found
+Makefile                libft_utils.c           minishell.h             split_utils.c           syntax_utils.c
+
+bash-3.2$ "<<" $HOME | ls
+bash: <<: command not found
+Makefile                libft_utils.c           minishell.h             split_utils.c           syntax_utils.c
+exec_list               libft_utils.o           minishell.o             split_utils.o           syntax_utils.o
+expand.c                minishell               split.c                 syntax+list_utils.c     to_do_list
+expand.o                minishell.c             split.o                 syntax+list_utils.o
+bash-3.2$ "<<" | $HOME ls
+bash: <<: command not found
+bash: /Users/iassafe: is a directory
+
