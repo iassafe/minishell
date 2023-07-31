@@ -705,3 +705,5 @@ minishell$: << >f
 // {
 // 	system("leaks minishell");
 // }
+
+push in github
