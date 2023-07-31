@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:11:26 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/07/31 15:33:40 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/07/31 15:48:55 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	main(int ac, char **av, char **env)
 		add_history(v.line);
 		alloc_list(v.line);
 		if (check_syntax(v.line))
-			write (2, "syntax error\n", 13);
+			write (2, "Syntax Error\n", 13);
 		else
 			ft_mini(&v);
 		free_list();
