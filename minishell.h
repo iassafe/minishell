@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:12:19 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/07/31 15:13:11 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/01 16:57:04 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+# include <stdio.h>
+# include <limits.h>
 
 typedef struct variables{
 	int		dq;
@@ -59,6 +61,7 @@ typedef struct env{
 typedef struct exec
 {
 	char		**cmd;
+	int			quo;
 	int			in_fd;
 	int			out_fd;
 	int			p_aft;
@@ -77,6 +80,7 @@ typedef struct global
 	t_free	*f;
 	t_msh	*msh;
 	t_env	*env;
+	char	pwd[PATH_MAX];
 }t_gl;
 
 extern t_gl	g_gl;
@@ -113,5 +117,7 @@ char	*ft_strdup(char *src);
 void	ft_alloc_tab(char **tab);
 void	free_list(void);
 t_exec	*exec_list(t_exec *x, t_exec *tmp, t_exec *new);
+
+void	ft_builtins(t_exec *x);
 
 #endif

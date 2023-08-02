@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 17:51:30 by iassafe           #+#    #+#             */
-/*   Updated: 2023/07/31 15:44:46 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/01 17:02:45 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ void	open_h_doc(t_exec *x)
 		ft_alloc(line);
 	}
 	close(x->in_fd);
-	unlink(name);
 	g_gl.msh = g_gl.msh->link->link;
 }
 
@@ -107,6 +106,8 @@ void	new_init(t_exec *x)
 		!ft_memcmp(g_gl.msh->exp, "opt\0", 4) || \
 		!ft_memcmp(g_gl.msh->exp, "env\0", 4)))
 		{
+			if (g_gl.msh->link && g_gl.msh->link->q == 1)
+				x->quo = 1;
 			x->cmd[i++] = ft_strdup(g_gl.msh->data);
 			g_gl.msh = g_gl.msh->link;
 		}

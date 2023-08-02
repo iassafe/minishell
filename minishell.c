@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:11:26 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/07/31 15:48:55 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/01 14:21:39 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,19 @@ void	ft_mini(t_var *v)
 	ft_expand();
 	ft_ignore();
 	x = exec_list(x, x, NULL);
+	ft_builtins(x);
+	// while (x)
+	// {
+	// 	int i = 0;
+	// 	while (x->cmd[i])
+	// 	{
+	// 		printf("[%s]\n", x->cmd[i]);
+	// 		i++;
+	// 	}
+	// 	printf("in fd == [%d]\n", x->in_fd);
+	// 	printf("out fd == [%d]\n", x->out_fd);
+	// 	x = x->link;
+	// }
 }
 
 int	main(int ac, char **av, char **env)

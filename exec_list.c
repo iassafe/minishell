@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 14:36:18 by iassafe           #+#    #+#             */
-/*   Updated: 2023/07/31 13:07:16 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/01 17:03:06 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ t_exec	*exec_list(t_exec *x, t_exec *tmp, t_exec *new)
 		ft_alloc(new->cmd);
 		new->in_fd = 0;
 		new->out_fd = 1;
+		new->quo = 0;
 		new->link = NULL;
 		new_init(new);
 		if (x == NULL)
