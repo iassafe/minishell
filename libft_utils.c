@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 10:42:12 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/07/31 11:21:15 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/08 09:12:04 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ void	ft_putstr(char *s, int fd)
 {
 	int	i;
 
+	if (s == NULL)
+		return ;
 	i = 0;
 	while (s[i])
 		write (fd, &s[i++], 1);

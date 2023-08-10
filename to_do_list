@@ -707,3 +707,42 @@ minishell$: << >f
 // }
 
 push in github
+
+
+minishell$: <<<
+Syntax Error
+minishell$: <<<""
+Syntax Error
+minishell$: <<";"
+> ;
+[1]    65206 segmentation fault  ./minishell
+
+
+
+void	sort_list_env(void)
+{
+	t_env	*tmp;
+	t_env	*next;
+	int		nb;
+
+	tmp = NULL;
+	while (g_gl.env)
+	{
+		next = g_gl.env;
+		while (next->link)
+		{
+			nb = ft_memcmp(next->var, next->link->var, 1);
+			if (nb > 0)
+			{
+				tmp = next;
+				next = next->link;
+				next->link = tmp;
+			}
+			else
+				next = next->link;
+			if (next->link == NULL)
+				break ;
+		}
+		g_gl.env = g_gl.env->link;
+	}
+}

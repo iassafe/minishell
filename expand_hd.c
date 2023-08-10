@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 11:17:00 by iassafe           #+#    #+#             */
-/*   Updated: 2023/07/31 15:14:05 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/09 11:10:43 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char	*name_heredoc(void)
 	char		*n;
 	int			i;
 	char		*name;
+	char		*str;
 	struct stat	file_info;
 
 	name = "/tmp/heredoc";
@@ -25,7 +26,8 @@ char	*name_heredoc(void)
 	i = 0;
 	while (!stat(name, &file_info))
 	{
-		name = ft_strjoin(n, ft_itoa(i));
+		str = ft_itoa(i);
+		name = ft_strjoin(n, str);
 		i++;
 	}
 	return (name);

@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 18:42:44 by iassafe           #+#    #+#             */
-/*   Updated: 2023/07/31 11:20:23 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/06 15:28:36 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,9 @@ void	ft_expand(void)
 	p = g_gl.msh;
 	while (p)
 	{
-		if ((!ft_memcmp(p->exp, "env\0", 4)
-				|| !ft_memcmp(p->exp, "cmd\0", 4)
-				|| !ft_memcmp(p->exp, "opt\0", 4)))
+		if ((!ft_memcmp(p->exp, "env", 4)
+				|| !ft_memcmp(p->exp, "cmd", 4)
+				|| !ft_memcmp(p->exp, "opt", 4)))
 			p->data = special_ch(p->data);
 		p = p->link;
 	}

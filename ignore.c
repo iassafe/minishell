@@ -6,13 +6,13 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 16:03:20 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/07/31 11:21:04 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/04 18:48:03 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*fun(char *s, t_var *p, char c)
+char	*ft_cut(char *s, t_var *p, char c)
 {
 	int		fir;
 
@@ -42,10 +42,11 @@ void	ft_ignore(void)
 		{
 			if (next->data[p.i] == '\"' || next->data[p.i] == '\'')
 			{
-				if (!ft_memcmp(next->exp, "del\0", 4))
-					next->q = 1;
+				next->q_empty = 1;
+				if (!ft_memcmp(next->exp, "del", 4))
+					next->q_del = 1;
 				c = next->data[p.i];
-				next->data = fun(next->data, &p, c);
+				next->data = ft_cut(next->data, &p, c);
 				p.i -= 2;
 			}
 			p.i++;

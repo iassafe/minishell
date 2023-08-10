@@ -6,73 +6,74 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 11:00:20 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/02 09:56:25 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/10 09:21:52 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec_echo(t_exec *x, t_var *v)
-{
-	v->i = 1;
-	v->n = 0;
-	while (x->cmd[v->i] && x->cmd[v->i][0] == '-' && x->cmd[v->i][1] == 'n')
-	{
-		v->d = 1;
-		while (x->cmd[v->i] && x->cmd[v->i][v->d] == 'n')
-			v->d++;
-		if (!x->cmd[v->i][v->d])
-		{
-			v->i++;
-			v->n = 1;
-		}
-		else
-			break ;
-	}
-	while (x->cmd[v->i])
-	{
-		ft_putstr(x->cmd[v->i], x->out_fd);
-		if (x->cmd[v->i + 1])
-			write(x->out_fd, " ", 1);
-		v->i++;
-	}
-	if (v->n == 0)
-		write(x->out_fd, "\n", 1);
-}
-
-void	exec_pwd(t_exec *x)
+void	xec_pwd(t_exec *x)
 {
 	char	*pwd;
 
 	pwd = getcwd(g_gl.pwd, sizeof(g_gl.pwd));
-	if (!pwd)
+	if (!pwd && !access(g_gl.pwd, F_OK))
 	{
-		perror("getcwd");
+		ft_putstr("Error\n", 2);
 		return ;
 	}
-	ft_putstr(pwd, x->out_fd);
+	ft_putstr(g_gl.pwd, x->out_fd);
 	write(x->out_fd, "\n", 1);
 }
 
-void	exec_env(t_exec *x)
+void	print_export(int fd, t_env *next)
 {
-	if (x->cmd[1] && x->cmd[1][0] != '\0' && x->quo == 1)
+	ft_putstr("declare -x ", fd);
+	ft_putstr(next->var, fd);
+	if (next->value)
 	{
-		ft_putstr("env: ", 2);
-		ft_putstr(x->cmd[1], 2);
-		ft_putstr(": No such file or directory\n", 2);
+		write(fd, "=\"", 2);
+		ft_putstr(next->value, fd);
+		write(fd, "\"", 1);
 	}
-	else
+	write(fd, "\n", 1);
+}
+
+void	xec_export(t_exec *x)
+{
+	t_env	*next;
+	int		i;
+
+	i = 0;
+	next = g_gl.env;
+	if (x->cmd[1])
+		check_export(x);
+	if (!x->cmd[1] || \
+		(x->cmd[1] && x->cmd[1][0] == '\0' && x->quo == 0 && !x->cmd[2]))
 	{
-		while (g_gl.env)
+		while (next)
 		{
-			ft_putstr(g_gl.env->var, x->out_fd);
-			write(x->out_fd, "=", 1);
-			ft_putstr(g_gl.env->value, x->out_fd);
-			write(x->out_fd, "\n", 1);
-			g_gl.env = g_gl.env->link;
+			if (g_gl.em_e == 1 && \
+			(!ft_memcmp("_", next->var, ft_strlen(next->var) + 2) \
+			|| !ft_memcmp("PATH", next->var, ft_strlen(next->var) + 5)))
+				i++;
+			else
+				print_export(x->out_fd, next);
+			next = next->link;
 		}
 	}
+}
+
+void	xec_exit(t_exec *x)
+{
+	if (!x->cmd[1] || \
+	(x->cmd[1] && x->cmd[1][0] == '\0' && !x->cmd[2] && x->quo == 0))
+	{
+		ft_putstr("exit\n", 2);
+		exit(0);
+	}
+	else
+		check_arg(x);
 }
 
 void	ft_builtins(t_exec *x)
@@ -81,15 +82,23 @@ void	ft_builtins(t_exec *x)
 
 	while (x)
 	{
-		if (!ft_memcmp(x->cmd[0], "echo\0", 5)
-			|| !ft_memcmp(x->cmd[0], "ECHO\0", 5))
-			exec_echo(x, &v);
-		else if (!ft_memcmp(x->cmd[0], "pwd\0", 4)
-			|| !ft_memcmp(x->cmd[0], "PWD\0", 4))
-			exec_pwd(x);
-		else if (!ft_memcmp(x->cmd[0], "env\0", 4)
-			|| !ft_memcmp(x->cmd[0], "ENV\0", 4))
-			exec_env(x);
+		if (x->cmd[0])
+		{
+			if (!ft_memcmp(x->cmd[0], "echo", 5))
+				xec_echo(x, &v);
+			else if (!ft_memcmp(x->cmd[0], "pwd", 4))
+				xec_pwd(x);
+			else if (!ft_memcmp(x->cmd[0], "env", 4))
+				xec_env(x);
+			else if (!ft_memcmp(x->cmd[0], "export", 7))
+				xec_export(x);
+			else if (!ft_memcmp(x->cmd[0], "unset", 6))
+				xec_unset(x);
+			else if (!ft_memcmp(x->cmd[0], "cd", 3))
+				xec_cd(x);
+			else if (!ft_memcmp(x->cmd[0], "exit", 4))
+				xec_exit(x);
+		}
 		x = x->link;
 	}
 }

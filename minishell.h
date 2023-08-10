@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:12:19 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/01 16:57:04 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/10 09:30:53 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,15 @@ typedef struct variables{
 	char	*line;
 	char	**tab;
 	char	**env;
+	int		egal;
 }	t_var;
 
 typedef struct minishell
 {
 	char				*data;
 	char				*exp;
-	int					q;
+	int					q_del;
+	int					q_empty;
 	struct minishell	*link;
 }	t_msh;
 
@@ -56,6 +58,7 @@ typedef struct env{
 	char				*var;
 	char				*value;
 	struct env			*link;
+	struct env			*prev;
 }	t_env;
 
 typedef struct exec
@@ -75,49 +78,84 @@ typedef struct release
 	struct release	*link;
 }	t_free;
 
+typedef struct release_env
+{
+	void				*ptr;
+	struct release_env	*link;
+}	t_free_env;
+
 typedef struct global
 {
-	t_free	*f;
-	t_msh	*msh;
-	t_env	*env;
-	char	pwd[PATH_MAX];
+	t_free		*f;
+	t_free_env	*f_env;
+	t_msh		*msh;
+	t_env		*env;
+	char		pwd[PATH_MAX];
+	int			em_e;
 }t_gl;
 
 extern t_gl	g_gl;
 
-int		ft_isalpha(int c);
-int		ft_isalnum(char c);
-void	ft_expand(void);
-int		ft_memcmp(char *p1, char *p2, int s);
-int		check_syntax(char *s);
-char	**ft_split(char *s);
-char	*ft_strchr(const char *str, int c);
-void	*ft_memcpy(void *dest, const void *src, int n);
-void	release(char **tab);
+// syntax error
 int		doubles(char *s);
-int		ft_strlen(char *s);
-char	*ft_substr(char *s, int first, int len);
-char	*ft_strjoin(char *s1, char *s2);
+int		check_syntax(char *s);
 int		check_others(char *s, int i);
 char	*get_type(char *s, int n, char *str);
+
+// env
+char	*ft_itoa1(int n);
+size_t	ft_nb_len(int nb);
+void	free_list_env(void);
+void	ft_alloc_env(void *p);
+void	alloc_list_env(void *line);
+void	ft_create_node(t_env *new);
+char	*ft_substr1(char *s, int first, int len);
+
+// expand
+void	ft_expand(void);
+void	ft_ignore(void);
+char	*special_ch(char *s);
+char	*dollars(char *s, t_var *p);
 char	*expanded_s(char *s, t_var *p);
 char	*env_search(char *s, int pos, int pos1);
-void	ft_ignore(void);
-char	*dollars(char *s, t_var *p);
-void	ft_putstr(char *s, int fd);
-void	ft_error(char *s);
-void	alloc_list(void *line);
-void	ft_alloc(void *p);
+
+// open file
 void	new_init(t_exec *x);
-char	*special_ch(char *s);
 char	*expand_hd(char *s);
 char	*name_heredoc(void);
-char	*ft_itoa(int n);
-char	*ft_strdup(char *src);
-void	ft_alloc_tab(char **tab);
-void	free_list(void);
 t_exec	*exec_list(t_exec *x, t_exec *tmp, t_exec *new);
 
-void	ft_builtins(t_exec *x);
+// free
+void	free_list(void);
+void	ft_alloc(void *p);
+void	release(char **tab);
+void	alloc_list(void *line);
+void	ft_alloc_tab(char **tab);
 
+// libft
+char	*ft_itoa(int n);
+int		ft_isdigit(int c);
+void	ft_error(char *s);
+int		ft_isalpha(int c);
+int		ft_strlen(char *s);
+int		ft_isalnum(char c);
+char	**ft_split(char *s);
+char	*ft_strdup(char *src);
+int		ft_atoi(const char *str);
+void	ft_putstr(char *s, int fd);
+char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strchr(const char *str, int c);
+int		ft_memcmp(char *p1, char *p2, int s);
+char	*ft_substr(char *s, int first, int len);
+void	*ft_memcpy(void *dest, const void *src, int n);
+
+// bultins
+void	xec_cd(t_exec *x);
+void	cd_with(char *cmd);
+void	xec_env(t_exec *x);
+void	check_arg(t_exec *x);
+void	xec_unset(t_exec *x);
+void	ft_builtins(t_exec *x);
+void	check_export(t_exec *x);
+void	xec_echo(t_exec *x, t_var *v);
 #endif

@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 12:11:23 by iassafe           #+#    #+#             */
-/*   Updated: 2023/07/31 11:16:10 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/09 11:10:31 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,28 @@ char	*ft_strdup(char *src)
 	}
 	t[i] = '\0';
 	return (t);
+}
+
+int	ft_atoi(const char *str)
+{
+	int		i;
+	int		s;
+	int		n;
+
+	n = 0;
+	s = 1;
+	i = 0;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			s *= -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		n = n * 10 + str[i++] - 48;
+	}
+	return (s * n);
 }
