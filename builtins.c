@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 11:00:20 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/10 09:21:52 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/12 16:25:03 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ void	xec_export(t_exec *x)
 		while (next)
 		{
 			if (g_gl.em_e == 1 && \
-			(!ft_memcmp("_", next->var, ft_strlen(next->var) + 2) \
-			|| !ft_memcmp("PATH", next->var, ft_strlen(next->var) + 5)))
+			(!ft_memcmp("_", next->var, 2) \
+			|| !ft_memcmp("PATH", next->var, 5)))
 				i++;
 			else
 				print_export(x->out_fd, next);

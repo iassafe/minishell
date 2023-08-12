@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   empty_env.c                                        :+:      :+:    :+:   */
+/*   em+xec_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 13:37:50 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/10 09:33:49 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/12 09:59:50 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,7 @@ void	xec_env(t_exec *x)
 	{
 		while (next)
 		{
-			if (!ft_memcmp("PATH", next->var, ft_strlen(next->var) + 5)
-				&& g_gl.em_e == 1)
+			if (!ft_memcmp("PATH", next->var, 5) && g_gl.em_e == 1)
 				i++;
 			else if (next->value)
 				print_env(next->var, next->value, x->out_fd);

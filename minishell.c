@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:11:26 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/10 09:37:29 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/12 18:47:15 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,22 +93,34 @@ void	list_env(char **env, t_env *next, t_env	*new)
 
 void	ft_mini(t_var *v)
 {
-	t_exec		*x;
-
-	x = NULL;
 	v->tab = ft_split(v->line);
 	ft_alloc_tab(v->tab);
 	ft_alloc(v->tab);
 	make_list(v->tab, NULL, NULL);
 	ft_expand();
 	ft_ignore();
-	x = exec_list(x, x, NULL);
-	ft_builtins(x);
+	g_gl.xec = exec_list(NULL, NULL, NULL);
+	// ft_builtins(g_gl.xec);
+	xec_cmd();
 }
+
+void	sigint_handler(int si)
+{
+	int	status;
+
+	(void)si;
+	if (WIFSIGNALED(status))
+		g_gl.exit = WIFSIGNALED(status);
+	rl_replace_line("", 0);
+	printf("\n");
+	rl_on_new_line();
+	rl_redisplay();
+}
+
 
 int	main(int ac, char **av, char **env)
 {
-	t_var		v;
+	t_var	v;
 
 	(void)ac;
 	(void)av;
@@ -116,12 +128,19 @@ int	main(int ac, char **av, char **env)
 	v.egal = 0;
 	g_gl.em_e = 0;
 	getcwd(g_gl.pwd, sizeof(g_gl.pwd));
+	signal(SIGQUIT, SIG_IGN);
 	list_env(v.env, g_gl.env, NULL);
 	while (1)
 	{
+		rl_catch_signals = 0;
+		signal(SIGINT, sigint_handler);
 		v.line = readline("minishell$: ");
 		if (!v.line)
-			return (0);
+		{
+			printf("exit\n");
+			g_gl.exit = 0; 
+			exit(0);
+		}
 		add_history(v.line);
 		alloc_list(v.line);
 		if (check_syntax(v.line))

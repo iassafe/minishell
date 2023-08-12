@@ -746,3 +746,34 @@ void	sort_list_env(void)
 		g_gl.env = g_gl.env->link;
 	}
 }
+
+
+
+// void	ft_wait_process(t_cmd *h, pid_t	pid)
+// {
+// 	int		status;
+
+// 	ft_unlink_heredoc();
+// 	while (h)
+// 	{
+// 		(h->input != 0) && close(h->input);
+// 		(h->output != 1) && close(h->output);
+// 		h = h->next;
+// 	}
+// 	waitpid(pid, &status, 0);
+// 	while (waitpid(-1, 0, 0) != -1)
+// 		;
+// 	if (WIFEXITED(status))
+// 		g_global.exit_global = WEXITSTATUS(status);
+// 	if (WIFSIGNALED(status))
+// 	{
+// 		if (WTERMSIG(status) == 3 || WTERMSIG(status) == 2)
+// 		{
+// 			g_global.exit_global = 128 + WTERMSIG(status);
+// 			if (WTERMSIG(status) == 3)
+// 				printf("Quit: %d\n", WTERMSIG(status));
+// 			else
+// 				printf("\n");
+// 		}
+// 	}
+// }

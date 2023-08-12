@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:12:19 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/10 09:30:53 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/12 14:42:31 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+# include <stdio.h>
 # include <fcntl.h>
 # include <sys/stat.h>
-# include <stdio.h>
 # include <limits.h>
+# include <signal.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 typedef struct variables{
 	int		dq;
@@ -43,6 +44,11 @@ typedef struct variables{
 	char	**tab;
 	char	**env;
 	int		egal;
+
+	char	**paths_tab;
+	pid_t	pid;
+	int		status;
+	int		pipe_end[2];
 }	t_var;
 
 typedef struct minishell
@@ -68,6 +74,7 @@ typedef struct exec
 	int			in_fd;
 	int			out_fd;
 	int			p_aft;
+	pid_t		pid;
 	struct exec	*prev;
 	struct exec	*link;
 }	t_exec;
@@ -90,8 +97,10 @@ typedef struct global
 	t_free_env	*f_env;
 	t_msh		*msh;
 	t_env		*env;
+	t_exec		*xec;
 	char		pwd[PATH_MAX];
 	int			em_e;
+	int			exit;
 }t_gl;
 
 extern t_gl	g_gl;
@@ -158,4 +167,9 @@ void	xec_unset(t_exec *x);
 void	ft_builtins(t_exec *x);
 void	check_export(t_exec *x);
 void	xec_echo(t_exec *x, t_var *v);
+
+// 	execution
+void	xec_cmd(void);
+char	**fun_split(char *s, char c);
+char	*ft_strjoin3(char *s1, char *s2, char *s3);
 #endif

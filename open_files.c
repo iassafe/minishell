@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 17:51:30 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/10 09:22:51 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/12 11:28:55 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void	open_h_doc(t_exec *x)
 	close(x->in_fd);
 	x->in_fd = open(name, O_RDONLY);
 	g_gl.msh = g_gl.msh->link->link;
-	puts("***");
 }
 
 void	new_init(t_exec *x)
