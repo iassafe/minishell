@@ -58,6 +58,8 @@ void	ft_dup(t_exec *next)
 		dup2(next->in_fd, 0);
 	while (head)
 	{
+		if (head->in_fd != 0)
+			close(head->in_fd);
 		if (head->out_fd != 1)
 			close(head->out_fd);
 		head = head->link;
