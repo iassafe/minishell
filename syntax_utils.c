@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 13:28:37 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/07/28 17:47:58 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/13 14:51:57 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,6 @@ int	before(char *s, int pos, char c, t_var *p)
 
 int	after(char *s, int pos, char c, t_var *p)
 {
-	int		i;
-
-	i = pos;
 	pos++;
 	if ((s[pos] == c || (c == '<')) || ((c == '>')))
 	{

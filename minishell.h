@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:12:19 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/13 11:07:18 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/13 17:25:39 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,7 @@ typedef struct variables{
 	char	**env;
 	int		egal;
 
-	char	**paths_tab;
 	pid_t	pid;
-	int		status;
 	int		pipe_end[2];
 }	t_var;
 
@@ -127,6 +125,7 @@ char	*special_ch(char *s);
 char	*dollars(char *s, t_var *p);
 char	*expanded_s(char *s, t_var *p);
 char	*env_search(char *s, int pos, int pos1);
+void	list_env(char **env, t_env *next, t_env	*new);
 
 // open file
 void	new_init(t_exec *x);
@@ -170,6 +169,7 @@ int		check_builtins(char	*cmd);
 void	xec_echo(t_exec *x, t_var *v);
 
 // 	execution
+char	**copy_env(void);
 char	**get_paths(void);
 void	ft_execution(void);
 void	execute(t_exec *next);
@@ -179,6 +179,9 @@ char	**fun_split(char *s, char c);
 char	*ft_strjoin3(char *s1, char *s2, char *s3);
 
 // signals
-void	signals_handler(void);
+void	signals_handler(int status);
+
+// exit status
+void	exit_status(void);
 
 #endif

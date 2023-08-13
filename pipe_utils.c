@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 10:50:34 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/13 11:00:43 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/13 16:07:18 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,11 @@ char	**get_paths(void)
 	return (paths_tab);
 }
 
-void	signals_handler(void)
+void	signals_handler(int status)
 {
-	int	status;
 
 	if (WIFEXITED(status))
-		g_gl.exit = status;
+		g_gl.exit = WEXITSTATUS(status);
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == 3 || WTERMSIG(status) == 2)

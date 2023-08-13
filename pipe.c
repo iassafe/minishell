@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:08:57 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/13 11:36:01 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/13 16:06:48 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	execute_cmd(t_exec *next)
 		xec_path = ft_strjoin3(paths_tab[i], "/", next->cmd[0]);
 		if (xec_path && access(xec_path, X_OK) == 0)
 		{
-			execve(xec_path, next->cmd, NULL);
+			execve(xec_path, next->cmd, copy_env());
 			exit(1);
 		}
 		i++;
@@ -103,6 +103,7 @@ void	open_pipe(t_exec *next)
 void	ft_execution(void)
 {
 	t_exec	*next;
+	int		status;
 
 	next = g_gl.xec;
 	if (!next)
@@ -119,7 +120,7 @@ void	ft_execution(void)
 		next = next->link;
 	}
 	close_fd(g_gl.xec);
-	while (waitpid(-1, NULL, 0) != -1)
+	while (waitpid(-1, &status, 0) != -1)
 		;
-	signals_handler();
+	signals_handler(status);
 }

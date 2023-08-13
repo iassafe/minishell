@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:11:26 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/13 11:18:04 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/13 17:35:45 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,54 +43,6 @@ void	make_list(char **tab, t_msh	*new, t_msh	*ptr)
 	}
 }
 
-void	init_new(t_env	*new, char **env, int i)
-{
-	int		j;
-	int		nb;
-
-	j = 0;
-	while (env[i][j] != '=')
-		j++;
-	new->var = ft_substr1(env[i], 0, j);
-	if (!ft_memcmp(new->var, "SHLVL", 6))
-	{
-		nb = ft_atoi(ft_substr1(env[i], j + 1, ft_strlen(env[i])));
-		new->value = ft_itoa1(nb + 1);
-	}
-	else
-		new->value = ft_substr1(env[i], j + 1, ft_strlen(env[i]));
-	new->link = NULL;
-}
-
-void	list_env(char **env, t_env *next, t_env	*new)
-{
-	int		i;
-
-	i = 0;
-	if (!env[i])
-		ft_create_node(new);
-	while (env[i])
-	{
-		new = malloc(sizeof (t_env));
-		if (!new)
-			return ;
-		alloc_list_env(new);
-		init_new(new, env, i);
-		if (g_gl.env == NULL)
-		{
-			new->prev = NULL;
-			g_gl.env = new;
-		}
-		else
-		{
-			new->prev = next;
-			next->link = new;
-		}
-		next = new;
-		i++;
-	}
-}
-
 void	ft_mini(t_var *v)
 {
 	v->tab = ft_split(v->line);
@@ -100,6 +52,7 @@ void	ft_mini(t_var *v)
 	ft_expand();
 	ft_ignore();
 	g_gl.xec = exec_list(NULL, NULL, NULL);
+	exit_status();
 	ft_execution();
 }
 
