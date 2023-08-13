@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:12:19 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/12 14:42:31 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/13 11:07:18 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,10 +166,19 @@ void	check_arg(t_exec *x);
 void	xec_unset(t_exec *x);
 void	ft_builtins(t_exec *x);
 void	check_export(t_exec *x);
+int		check_builtins(char	*cmd);
 void	xec_echo(t_exec *x, t_var *v);
 
 // 	execution
-void	xec_cmd(void);
+char	**get_paths(void);
+void	ft_execution(void);
+void	execute(t_exec *next);
+void	close_fd(t_exec *head);
+void	open_pipe(t_exec *next);
 char	**fun_split(char *s, char c);
 char	*ft_strjoin3(char *s1, char *s2, char *s3);
+
+// signals
+void	signals_handler(void);
+
 #endif

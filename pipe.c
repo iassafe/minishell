@@ -6,45 +6,36 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:08:57 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/12 18:45:32 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/13 11:36:01 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_builtins(char	*cmd)
+void	execute_cmd(t_exec *next)
 {
-	if ((!ft_memcmp(cmd, "echo", 5))
-		|| (!ft_memcmp(cmd, "pwd", 4))
-		|| (!ft_memcmp(cmd, "env", 4))
-		|| (!ft_memcmp(cmd, "export", 7))
-		|| (!ft_memcmp(cmd, "unset", 6))
-		|| (!ft_memcmp(cmd, "cd", 3))
-		|| (!ft_memcmp(cmd, "exit", 4)))
-		return (1);
-	return (0);
-}
-
-char	**get_paths(void)
-{
-	t_env	*next;
+	char	*xec_path;
 	char	**paths_tab;
-	t_var	p;
+	int		i;
 
-	p.i = 0;
-	paths_tab = NULL;
-	next = g_gl.env;
-	while (next)
+	i = 0;
+	paths_tab = get_paths();
+	while (paths_tab[i])
 	{
-		if (!ft_memcmp(next->var, "PATH", 5))
+		xec_path = ft_strjoin3(paths_tab[i], "/", next->cmd[0]);
+		if (xec_path && access(xec_path, X_OK) == 0)
 		{
-			paths_tab = fun_split(next->value, ':');
-			ft_alloc_tab(paths_tab);
-			break ;
+			execve(xec_path, next->cmd, NULL);
+			exit(1);
 		}
-		next = next->link;
+		i++;
 	}
-	return (paths_tab);
+	if (!paths_tab[i])
+	{
+		ft_putstr (ft_strjoin3("minishell: ", next->cmd[0], \
+		": command not found\n"), 2);
+		exit(127);
+	}
 }
 
 void	ft_dup(t_exec *next)
@@ -66,21 +57,27 @@ void	ft_dup(t_exec *next)
 	}
 }
 
-void	ft_child(t_exec *next, char *xec_path)
+void	ft_child(t_exec *next)
 {
-
 	next->pid = fork();
 	if (next->pid < 0)
 		exit (1);
 	if (next->pid == 0)
 	{
-		ft_dup(next);
-		execve(xec_path, next->cmd, NULL);
-		exit(127);
+		if (check_builtins(next->cmd[0]))
+		{
+			ft_builtins(next);
+			exit(0);
+		}
+		else
+		{
+			ft_dup(next);
+			execute_cmd(next);
+		}
 	}
 }
 
-void	xec1cmd(t_exec *next, char *xec_path)
+void	open_pipe(t_exec *next)
 {
 	t_var	p;
 
@@ -100,60 +97,29 @@ void	xec1cmd(t_exec *next, char *xec_path)
 		else
 			close(next->link->in_fd);
 	}
-	ft_child(next, xec_path);
+	ft_child(next);
 }
 
-void	execute(t_exec *next, char **paths_tab)
-{
-	t_var	p;
-	char	*xec_path;
-
-	p.i = 0;
-	while (paths_tab[p.i])
-	{
-		if (next->cmd[0][0] == '\0')
-		{
-			ft_putstr (ft_strjoin3("minishell: ", next->cmd[0], \
-			": command not found\n"), 2);
-			return ;
-		}
-		xec_path = ft_strjoin3(paths_tab[p.i], "/", next->cmd[0]);
-		if (xec_path && access(xec_path, X_OK) == 0)
-		{
-			xec1cmd(next, xec_path);
-			return ;
-		}
-		p.i++;
-	}
-	if (!paths_tab[p.i])
-		ft_putstr (ft_strjoin3("minishell: ", next->cmd[0], \
-		": command not found\n"), 2);
-}
-
-void	xec_cmd(void)
+void	ft_execution(void)
 {
 	t_exec	*next;
-	t_var	p;
 
-	p.paths_tab = get_paths();
 	next = g_gl.xec;
 	if (!next)
 		return ;
 	while (next)
 	{
 		if (next->cmd[0])
-			execute(next, p.paths_tab);
+		{
+			if (check_builtins(next->cmd[0]) && !next->prev && !next->link)
+				ft_builtins(next);
+			else
+				execute(next);
+		}
 		next = next->link;
 	}
-	next = g_gl.xec;
-	while (next)
-	{
-		if (next->in_fd != 0)
-			close(next->in_fd);
-		if (next->out_fd != 1)
-			close(next->out_fd);
-		next = next->link;
-	}
+	close_fd(g_gl.xec);
 	while (waitpid(-1, NULL, 0) != -1)
 		;
+	signals_handler();
 }

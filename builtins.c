@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 11:00:20 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/12 16:25:03 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/13 08:20:40 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,25 +80,21 @@ void	ft_builtins(t_exec *x)
 {
 	t_var	v;
 
-	while (x)
+	if (x->cmd[0])
 	{
-		if (x->cmd[0])
-		{
-			if (!ft_memcmp(x->cmd[0], "echo", 5))
-				xec_echo(x, &v);
-			else if (!ft_memcmp(x->cmd[0], "pwd", 4))
-				xec_pwd(x);
-			else if (!ft_memcmp(x->cmd[0], "env", 4))
-				xec_env(x);
-			else if (!ft_memcmp(x->cmd[0], "export", 7))
-				xec_export(x);
-			else if (!ft_memcmp(x->cmd[0], "unset", 6))
-				xec_unset(x);
-			else if (!ft_memcmp(x->cmd[0], "cd", 3))
-				xec_cd(x);
-			else if (!ft_memcmp(x->cmd[0], "exit", 4))
-				xec_exit(x);
-		}
-		x = x->link;
+		if (!ft_memcmp(x->cmd[0], "echo", 5))
+			xec_echo(x, &v);
+		else if (!ft_memcmp(x->cmd[0], "pwd", 4))
+			xec_pwd(x);
+		else if (!ft_memcmp(x->cmd[0], "env", 4))
+			xec_env(x);
+		else if (!ft_memcmp(x->cmd[0], "export", 7))
+			xec_export(x);
+		else if (!ft_memcmp(x->cmd[0], "unset", 6))
+			xec_unset(x);
+		else if (!ft_memcmp(x->cmd[0], "cd", 3))
+			xec_cd(x);
+		else if (!ft_memcmp(x->cmd[0], "exit", 4))
+			xec_exit(x);
 	}
 }

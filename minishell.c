@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 13:11:26 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/12 18:47:15 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/13 11:18:04 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,7 @@ void	ft_mini(t_var *v)
 	ft_expand();
 	ft_ignore();
 	g_gl.xec = exec_list(NULL, NULL, NULL);
-	// ft_builtins(g_gl.xec);
-	xec_cmd();
+	ft_execution();
 }
 
 void	sigint_handler(int si)
@@ -116,7 +115,6 @@ void	sigint_handler(int si)
 	rl_on_new_line();
 	rl_redisplay();
 }
-
 
 int	main(int ac, char **av, char **env)
 {
@@ -138,7 +136,7 @@ int	main(int ac, char **av, char **env)
 		if (!v.line)
 		{
 			printf("exit\n");
-			g_gl.exit = 0; 
+			g_gl.exit = 0;
 			exit(0);
 		}
 		add_history(v.line);
