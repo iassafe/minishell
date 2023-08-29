@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 16:30:40 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/07/29 11:47:36 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/15 14:31:37 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,8 @@ char	**c_col(char **tab, char *s)
 				release (tab);
 				return (NULL);
 			}
-			tab[j][s - tmp] = 0;
-			ft_memcpy(tab[j++], tmp, (s - tmp));
+			ft_memcpy(tab[j], tmp, (s - tmp));
+			tab[j++][s - tmp] = '\0';
 		}
 		else
 			s++;

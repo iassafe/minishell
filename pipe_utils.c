@@ -6,31 +6,64 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 10:50:34 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/13 16:07:18 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/19 14:30:31 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_builtins(char	*cmd)
+char	*ft_cmd(t_exec *next)
 {
-	if ((!ft_memcmp(cmd, "echo", 5))
-		|| (!ft_memcmp(cmd, "pwd", 4))
-		|| (!ft_memcmp(cmd, "env", 4))
-		|| (!ft_memcmp(cmd, "export", 7))
-		|| (!ft_memcmp(cmd, "unset", 6))
-		|| (!ft_memcmp(cmd, "cd", 3))
-		|| (!ft_memcmp(cmd, "exit", 4)))
-		return (1);
-	return (0);
+	int	i;
+
+	i = 0;
+	if (next->ch_val == 1)
+	{
+		while (next->cmd[0] && next->cmd[0][i] != ' ' && \
+			next->cmd[0][i] != '\t' && next->cmd[0][i])
+			i++;
+		if (next->cmd[0][i])
+			return (ft_substr(next->cmd[0], 0, i));
+	}
+	return (next->cmd[0]);
+}
+
+void	searching_path(t_exec *next, char **paths_tab)
+{
+	char	*xec_path;
+	int		i;
+
+	i = 0;
+	while (paths_tab && paths_tab[i])
+	{
+		xec_path = ft_strjoin3(paths_tab[i], "/", ft_cmd(next));
+		if (xec_path && access(xec_path, X_OK) == 0)
+		{
+			execve(xec_path, next->cmd, copy_env());
+			perror("minishell ");
+			exit(1);
+		}
+		i++;
+	}
+	if (!paths_tab || !paths_tab[i])
+	{
+		if (paths_tab && !paths_tab[i])
+			ft_putstr (ft_strjoin3("minishell: ", ft_cmd(next), \
+		": command not found\n"), 2);
+		else
+			ft_putstr (ft_strjoin3("minishell: ", ft_cmd(next), \
+		": No such file or directory\n"), 2);
+		exit(127);
+	}
 }
 
 void	execute(t_exec *next)
 {
-	if (next->cmd[0][0] == '\0')
+	if (next->cmd[0] && next->cmd[0][0] == '\0')
 	{
 		ft_putstr (ft_strjoin3("minishell: ", next->cmd[0], \
 		": command not found\n"), 2);
+		g_gl.exit = 127;
 	}
 	else
 		open_pipe(next);
@@ -51,29 +84,11 @@ char	**get_paths(void)
 		{
 			paths_tab = fun_split(next->value, ':');
 			ft_alloc_tab(paths_tab);
-			break ;
+			return (paths_tab);
 		}
 		next = next->link;
 	}
-	return (paths_tab);
-}
-
-void	signals_handler(int status)
-{
-
-	if (WIFEXITED(status))
-		g_gl.exit = WEXITSTATUS(status);
-	if (WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == 3 || WTERMSIG(status) == 2)
-		{
-			g_gl.exit = WTERMSIG(status) + 128;
-			if (WTERMSIG(status) == 3)
-				printf("Quit: %d\n", WTERMSIG(status));
-			else
-				printf("\n");
-		}
-	}
+	return (NULL);
 }
 
 void	close_fd(t_exec *head)

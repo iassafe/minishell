@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 11:00:20 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/13 08:20:40 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/18 18:20:09 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,12 @@ void	xec_pwd(t_exec *x)
 	if (!pwd && !access(g_gl.pwd, F_OK))
 	{
 		ft_putstr("Error\n", 2);
+		g_gl.exit = 1;
 		return ;
 	}
 	ft_putstr(g_gl.pwd, x->out_fd);
 	write(x->out_fd, "\n", 1);
+	g_gl.exit = 0;
 }
 
 void	print_export(int fd, t_env *next)
@@ -48,8 +50,7 @@ void	xec_export(t_exec *x)
 	next = g_gl.env;
 	if (x->cmd[1])
 		check_export(x);
-	if (!x->cmd[1] || \
-		(x->cmd[1] && x->cmd[1][0] == '\0' && x->quo == 0 && !x->cmd[2]))
+	if (!x->cmd[1])
 	{
 		while (next)
 		{
@@ -61,15 +62,16 @@ void	xec_export(t_exec *x)
 				print_export(x->out_fd, next);
 			next = next->link;
 		}
+		g_gl.exit = 0;
 	}
 }
 
 void	xec_exit(t_exec *x)
 {
-	if (!x->cmd[1] || \
-	(x->cmd[1] && x->cmd[1][0] == '\0' && !x->cmd[2] && x->quo == 0))
+	if (!x->cmd[1])
 	{
 		ft_putstr("exit\n", 2);
+		g_gl.exit = 0;
 		exit(0);
 	}
 	else

@@ -1,42 +1,55 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit_status.c                                      :+:      :+:    :+:   */
+/*   others.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 15:21:14 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/13 17:41:05 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/19 16:32:32 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exit_status(void)
+int	check_builtins(char	*cmd)
 {
-	t_exec	*x;
-	t_var	v;
-
-	x = g_gl.xec;
-	while (x)
+	if (cmd)
 	{
-		v.i = 0;
-		while (x->cmd[v.i])
-		{
-			v.j = 0;
-			while (x->cmd[v.i][v.j])
-			{
-				if (x->cmd[v.i][v.j] == '$' && x->cmd[v.i][v.j + 1] == '?')
-				{
-					v.s1 = ft_substr(x->cmd[v.i], 0, v.j);
-					v.s2 = ft_substr(x->cmd[v.i], v.j + 2, \
-							ft_strlen(x->cmd[v.i]));
-					x->cmd[v.i] = ft_strjoin3(v.s1, ft_itoa(g_gl.exit), v.s2);
-				}
-				v.j++;
-			}
-			v.i++;
-		}
-		x = x->link;
+		if ((!ft_memcmp(cmd, "echo", 5))
+			|| (!ft_memcmp(cmd, "pwd", 4))
+			|| (!ft_memcmp(cmd, "env", 4))
+			|| (!ft_memcmp(cmd, "export", 7))
+			|| (!ft_memcmp(cmd, "unset", 6))
+			|| (!ft_memcmp(cmd, "cd", 3))
+			|| (!ft_memcmp(cmd, "exit", 4)))
+			return (1);
 	}
+	return (0);
+}
+
+int	check_slash(char *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	check_dir(char *cmd)
+{
+	int	i;
+
+	i = 0;
+	while (cmd[i] == '.' || cmd[i] == '/')
+		i++;
+	if (cmd[i] == '\0' && i)
+		return (1);
+	return (0);
 }

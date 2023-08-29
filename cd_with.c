@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 14:41:10 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/09 17:32:08 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/19 16:13:08 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,19 @@ void	print_error(void)
 
 void	error_dir(char *cmd)
 {
-	ft_putstr("minishell: cd: ", 2);
-	ft_putstr(cmd, 2);
-	ft_putstr(": No such file or directory\n", 2);
+	if (access(cmd, F_OK) == 0)
+	{
+		ft_putstr("minishell: cd: ", 2);
+		ft_putstr(cmd, 2);
+		ft_putstr(": Not a directory\n", 2);
+	}
+	else
+	{
+		ft_putstr("minishell: cd: ", 2);
+		ft_putstr(cmd, 2);
+		ft_putstr(": No such file or directory\n", 2);
+	}
+	g_gl.exit = 1;
 }
 
 void	cd_with(char *cmd)
@@ -53,7 +63,7 @@ void	cd_with(char *cmd)
 		if (!ft_memcmp(env->var, "PWD", ft_strlen(env->var) + 4))
 		{
 			if (env->value)
-				pwd = ft_strdup(env->value);
+				pwd = env->value;
 			break ;
 		}
 		env = env->link;
@@ -63,7 +73,8 @@ void	cd_with(char *cmd)
 		if (cmd[0] == '.' && !getcwd(g_gl.pwd, sizeof(g_gl.pwd)))
 			print_error();
 		change_dir(pwd);
+		g_gl.exit = 0;
 	}
-	else if (chdir(cmd) != 0)
+	else
 		error_dir(cmd);
 }

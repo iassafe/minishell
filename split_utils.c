@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 17:26:46 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/07/28 11:01:01 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/14 16:07:41 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int	ft_strlen(char *s)
 {
 	int		i;
 
+	if (s == NULL)
+		return (0);
 	i = 0;
 	while (s[i])
 		i++;

@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 08:05:11 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/09 11:27:44 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/17 17:57:50 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,16 @@
 
 void	alloc_list_env(void *list)
 {
-	g_gl.f_env = malloc(sizeof(t_free));
 	if (!g_gl.f_env)
-		return ;
-	g_gl.f_env->ptr = list;
-	g_gl.f_env->link = NULL;
+	{
+		g_gl.f_env = malloc(sizeof(t_free));
+		if (!g_gl.f_env)
+			return ;
+		g_gl.f_env->ptr = list;
+		g_gl.f_env->link = NULL;
+	}
+	else
+		ft_alloc_env(list);
 }
 
 void	ft_alloc_env(void *p)
@@ -65,7 +70,7 @@ char	*ft_substr1(char *s, int first, int len)
 	sub = (char *)malloc(sizeof(char) * (len + 1));
 	if (sub == NULL)
 		return (NULL);
-	ft_alloc_env(sub);
+	alloc_list_env(sub);
 	i = 0;
 	while (*s && i < len && first <= l)
 		sub[i++] = s[first++];
@@ -84,7 +89,7 @@ char	*ft_itoa1(int n)
 	str = malloc(sizeof(char) * len + 1);
 	if (! str)
 		return (NULL);
-	ft_alloc_env(str);
+	alloc_list_env(str);
 	if (nb < 0)
 	{
 		str[0] = '-';

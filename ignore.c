@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 16:03:20 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/04 18:48:03 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/19 09:50:23 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,20 @@ void	ft_ignore(void)
 	while (next)
 	{
 		p.i = 0;
-		while (next->data[p.i])
+		if (next->data)
 		{
-			if (next->data[p.i] == '\"' || next->data[p.i] == '\'')
+			while (next->data[p.i])
 			{
-				next->q_empty = 1;
-				if (!ft_memcmp(next->exp, "del", 4))
-					next->q_del = 1;
-				c = next->data[p.i];
-				next->data = ft_cut(next->data, &p, c);
-				p.i -= 2;
+				if (next->data[p.i] == '\"' || next->data[p.i] == '\'')
+				{
+					if (!ft_memcmp(next->exp, "del", 4))
+						next->q_del = 1;
+					c = next->data[p.i];
+					next->data = ft_cut(next->data, &p, c);
+					p.i -= 2;
+				}
+				p.i++;
 			}
-			p.i++;
 		}
 		next = next->link;
 	}

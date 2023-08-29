@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 13:37:50 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/12 09:59:50 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/17 18:34:54 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	add_node(t_env *new, char *var, char *value)
 	next = malloc(sizeof(t_env));
 	if (!next)
 		return ;
-	ft_alloc_env(new);
+	alloc_list_env(new);
 	next->var = var;
 	next->value = value;
 	next->link = NULL;
@@ -62,12 +62,12 @@ void	xec_env(t_exec *x)
 
 	i = 0;
 	next = g_gl.env;
-	if (x->cmd[1] && ((x->cmd[1][0] == '\0' && x->quo == 1)
-		|| (x->cmd[1][0] != '\0')))
+	if (x->cmd[1])
 	{
 		ft_putstr("env: ", 2);
 		ft_putstr(x->cmd[1], 2);
 		ft_putstr(": No such file or directory\n", 2);
+		g_gl.exit = 127;
 	}
 	else
 	{
@@ -79,5 +79,6 @@ void	xec_env(t_exec *x)
 				print_env(next->var, next->value, x->out_fd);
 			next = next->link;
 		}
+		g_gl.exit = 0;
 	}
 }

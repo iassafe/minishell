@@ -6,11 +6,23 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 14:36:18 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/09 15:25:27 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/19 12:10:04 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*wr_herdoc(char *line, int in_fd, int fd)
+{
+	if (g_gl.msh->link->q_del != 1)
+		line = expand_hd(line);
+	ft_putstr(line, in_fd);
+	write (in_fd, "\n", 1);
+	line = readline("> ");
+	quit_herdoc(line, fd);
+	ft_alloc(line);
+	return (line);
+}
 
 int	count_cmd(t_msh	*head)
 {
@@ -29,11 +41,13 @@ int	count_cmd(t_msh	*head)
 	return (i + 1);
 }
 
-void	ft_init(t_exec *new)
+void	ft_init(t_exec *new, t_msh *x)
 {
 	new->in_fd = 0;
 	new->out_fd = 1;
-	new->quo = 0;
+	new->ch_val = 0;
+	if (x->ch_val == 1)
+		new->ch_val = 1;
 	new->link = NULL;
 }
 
@@ -49,7 +63,7 @@ t_exec	*exec_list(t_exec *x, t_exec *tmp, t_exec *new)
 		if (!new->cmd)
 			return (NULL);
 		ft_alloc(new->cmd);
-		ft_init(new);
+		ft_init(new, g_gl.msh);
 		new_init(new);
 		if (x == NULL)
 		{

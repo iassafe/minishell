@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 11:17:00 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/09 11:10:43 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/19 11:43:57 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*count_dollars_hd(char *s, t_var *p)
 	return (s);
 }
 
-void	check_var_form_hd(char *s, t_var *p)
+int	*check_var_form_hd(char *s, t_var *p)
 {
 	while (s[p->i])
 	{
@@ -78,12 +78,13 @@ void	check_var_form_hd(char *s, t_var *p)
 				p->i++;
 		}
 		if (s[p->i] == '$')
-			break ;
+			return (&p->i);
 		p->i++;
 	}
+	return (&p->i);
 }
 
-char	*exp_condition_hd(char *s, t_var *p)
+char	*exp_condition_hd(t_msh *x, char *s, t_var *p, int *pos_i)
 {
 	if (s[p->i] && ft_strchr("\"\'", s[p->i]))
 		p->i++;
@@ -92,27 +93,39 @@ char	*exp_condition_hd(char *s, t_var *p)
 		p->i++;
 		p->s1 = ft_substr(s, p->i, ft_strlen(s));
 		s = ft_strjoin(ft_substr(s, 0, p->i - 2), p->s1);
-		p->i--;
 	}
 	else if (s[p->i - 1] && s[p->i] && (ft_isalpha(s[p->i]) || s[p->i] == '_'))
 	{
-		s = env_search(s, p->i, p->i);
-		p->i = p->pos1 - 1;
+		s = env_search(x, s, p->i, pos_i);
+		p->i = *pos_i;
 	}
+	else if (s[p->i - 1] && s[p->i] == '?')
+	{
+		p->i++;
+		p->s1 = ft_substr(s, p->i, ft_strlen(s));
+		s = ft_strjoin3(ft_substr(s, 0, p->i - 2), ft_itoa(g_gl.exit), p->s1);
+	}
+	else
+		p->i++;
+	pos_i = &p->i;
 	return (s);
 }
 
 char	*expand_hd(char *s)
 {
 	t_var	p;
+	int		*pos_i;
 
 	s = count_dollars_hd(s, &p);
 	p.i = 0;
+	pos_i = &p.i;
 	while (s[p.i])
 	{
-		check_var_form_hd(s, &p);
+		pos_i = check_var_form_hd(s, &p);
+		p.i = *pos_i;
 		p.i++;
-		s = exp_condition_hd(s, &p);
+		s = exp_condition_hd(NULL, s, &p, pos_i);
+		p.i = *pos_i - 1;
 	}
 	return (s);
 }

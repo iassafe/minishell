@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 14:44:36 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/10 09:37:14 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/17 19:08:46 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	xec_echo(t_exec *x, t_var *v)
 		else
 			break ;
 	}
-	while (x->cmd[v->i])
+	while (x->cmd[v->i]) 
 	{
 		ft_putstr(x->cmd[v->i], x->out_fd);
 		if (x->cmd[v->i + 1])
@@ -38,6 +38,7 @@ void	xec_echo(t_exec *x, t_var *v)
 	}
 	if (v->n == 0)
 		write(x->out_fd, "\n", 1);
+	g_gl.exit = 0;
 }
 
 void	delete_node(char *cmd)
@@ -61,7 +62,7 @@ void	delete_node(char *cmd)
 			}
 			else if (!env->prev && !env->link)
 				g_gl.env = NULL;
-			else
+			else if (env->prev && !env->link)
 				env->prev->link = NULL;
 			break ;
 		}
@@ -69,12 +70,12 @@ void	delete_node(char *cmd)
 	}
 }
 
-int	check_cmd(char *cmd, t_exec *x)
+int	check_cmd(char *cmd)
 {
 	int	i;
 
 	i = 1;
-	if (((cmd[0] == '\0' && x->quo == 1) || (cmd[0] == '\"' || cmd[0] == '\'')))
+	if ((cmd[0] == '\0' || cmd[0] == '\"' || cmd[0] == '\''))
 		return (1);
 	else if (!ft_isalpha(cmd[0]) && cmd[0] != '_' && cmd[0] != '\0')
 		return (1);
@@ -96,15 +97,19 @@ void	xec_unset(t_exec *x)
 		i = 1;
 		while (x->cmd[i])
 		{
-			if (check_cmd(x->cmd[i], x))
+			if (check_cmd(x->cmd[i]))
 			{
 				ft_putstr("minishell: unset: `", 2);
 				ft_putstr(x->cmd[i], 2);
 				ft_putstr("': not a valid identifier\n", 2);
+				g_gl.exit = 1;
 				return ;
 			}
 			else
+			{
 				delete_node(x->cmd[i]);
+				g_gl.exit = 0;
+			}
 			i++;
 		}
 	}

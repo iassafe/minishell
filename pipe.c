@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:08:57 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/08/13 16:06:48 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/19 12:06:55 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,28 @@
 
 void	execute_cmd(t_exec *next)
 {
-	char	*xec_path;
 	char	**paths_tab;
-	int		i;
 
-	i = 0;
 	paths_tab = get_paths();
-	while (paths_tab[i])
+	if (check_slash(next->cmd[0]))
 	{
-		xec_path = ft_strjoin3(paths_tab[i], "/", next->cmd[0]);
-		if (xec_path && access(xec_path, X_OK) == 0)
+		if (access(next->cmd[0], F_OK) != 0)
+			g_gl.exit = 127;
+		else if (access(next->cmd[0], X_OK) != 0)
+			g_gl.exit = 126;
+		else if (check_dir(next->cmd[0]))
 		{
-			execve(xec_path, next->cmd, copy_env());
-			exit(1);
+			g_gl.exit = 126;
+			ft_putstr(ft_strjoin3("minishell: ", next->cmd[0], \
+			": is a directory\n"), 2);
+			exit(g_gl.exit);
 		}
-		i++;
+		execve(next->cmd[0], next->cmd, copy_env());
+		perror("minishell ");
+		exit(g_gl.exit);
 	}
-	if (!paths_tab[i])
-	{
-		ft_putstr (ft_strjoin3("minishell: ", next->cmd[0], \
-		": command not found\n"), 2);
-		exit(127);
-	}
+	else
+		searching_path(next, paths_tab);
 }
 
 void	ft_dup(t_exec *next)
@@ -61,13 +61,17 @@ void	ft_child(t_exec *next)
 {
 	next->pid = fork();
 	if (next->pid < 0)
+	{
+		ft_putstr("fork failed\n", 2);
 		exit (1);
+	}
 	if (next->pid == 0)
 	{
+		signal(SIGQUIT, SIG_DFL);
 		if (check_builtins(next->cmd[0]))
 		{
 			ft_builtins(next);
-			exit(0);
+			exit(g_gl.exit);
 		}
 		else
 		{
@@ -95,7 +99,10 @@ void	open_pipe(t_exec *next)
 		if (next->link->in_fd == 0)
 			next->link->in_fd = p.pipe_end[0];
 		else
+		{
+			close(p.pipe_end[0]);
 			close(next->link->in_fd);
+		}
 	}
 	ft_child(next);
 }
@@ -110,11 +117,14 @@ void	ft_execution(void)
 		return ;
 	while (next)
 	{
-		if (next->cmd[0])
+		if (check_builtins(next->cmd[0]) && !next->prev && !next->link)
 		{
-			if (check_builtins(next->cmd[0]) && !next->prev && !next->link)
+			if (next->in_fd != -1)
 				ft_builtins(next);
-			else
+		}
+		else
+		{
+			if (next->in_fd != -1)
 				execute(next);
 		}
 		next = next->link;

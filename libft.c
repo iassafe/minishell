@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 12:11:23 by iassafe           #+#    #+#             */
-/*   Updated: 2023/08/09 11:10:31 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/19 15:02:38 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ char	*ft_strdup(char *src)
 	char	*t;
 
 	i = 0;
+	if (src == NULL)
+		return (NULL);
 	len = ft_strlen(src);
 	t = (char *)malloc(sizeof(char) * (len + 1));
 	if (!(t))

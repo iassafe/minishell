@@ -6,7 +6,7 @@
 /*   By: iassafe <iassafe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 10:24:40 by khanhayf          #+#    #+#             */
-/*   Updated: 2023/07/31 11:20:49 by iassafe          ###   ########.fr       */
+/*   Updated: 2023/08/19 15:40:41 by iassafe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	*dollars(char *s, t_var *p)
 	return (s);
 }
 
-char	*expanded_s(char *s, t_var *p)
+char	*expanded_s(t_msh *x, char *s, t_var *p, int *pos_i)
 {
 	t_env	*c_env;
 
@@ -93,30 +93,31 @@ char	*expanded_s(char *s, t_var *p)
 		p->j++;
 		if (ft_memcmp(p->var1, c_env->var, (p->i)) == 0)
 		{
-			p->s1 = ft_substr(s, 0, p->pos1 - 1);
-			p->s2 = ft_substr(s, p->pos, ft_strlen(s));
-			s = ft_strjoin(p->s1, c_env->value);
-			s = ft_strjoin(s, p->s2);
-			break ;
+			s = join_value(s, p->pos1, c_env, x);
+			pos_i = &p->pos1;
+			return (s);
 		}
 		c_env = c_env->link;
 	}
 	if (p->j == p->n)
 	{
-		p->s1 = ft_substr(s, 0, p->pos1 - 1);
-		p->s2 = ft_substr(s, p->pos, ft_strlen(s));
-		s = ft_strjoin(p->s1, p->s2);
+		s = ft_strjoin(ft_substr(s, 0, p->pos1 - 1), \
+		ft_substr(s, p->pos, ft_strlen(s)));
+		p->i = p->pos - p->i;
+		pos_i = &p->i;
 	}
 	return (s);
 }
 
-char	*env_search(char *s, int pos, int pos1)
+char	*env_search(t_msh *x, char *s, int pos, int *pos_i)
 {
 	t_var	p;
+	int		pos1;
 	t_env	*c_env;
 
 	p.i = 0;
 	p.n = 0;
+	pos1 = pos;
 	c_env = g_gl.env;
 	while (c_env)
 	{
@@ -132,6 +133,6 @@ char	*env_search(char *s, int pos, int pos1)
 	p.pos = pos;
 	p.pos1 = pos1;
 	p.j = 0;
-	s = expanded_s(s, &p);
+	s = expanded_s(x, s, &p, pos_i);
 	return (s);
 }
